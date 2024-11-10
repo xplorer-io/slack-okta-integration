@@ -3,7 +3,7 @@ const { WebClient } = require("@slack/web-api");
 
 // initialize slack client
 const token = process.env.SLACK_TOKEN;
-const client = new WebClient(process.env.SLACK_TOKEN);
+const client = new WebClient(token);
 
 console.log("Slack token : ", process.env.SLACK_TOKEN);
 // slack sample code
