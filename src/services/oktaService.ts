@@ -1,32 +1,63 @@
 import fetch from "node-fetch";
 
+// here only for testing
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env.local" });
+
 const oktaDomain = "demo-crimson-coral-79700-admin.okta.com";
 const oktaToken = process.env.OKTA_TOKEN;
 
 // list users from okta
 export const fetchOktaUsers = async () => {
-  const response = await fetch(`https://${oktaDomain}/api/v1/users`, {
+  const query = new URLSearchParams({
+    limit: "3",
+  });
+  const response = await fetch(`https://${oktaDomain}/api/v1/users?${query}`, {
+    method: "GET",
     headers: {
-      Authorization: `SSWS ${oktaToken}`,
       "Content-Type": "application/json",
+      Authorization: `SSWS ${oktaToken}`,
     },
   });
   return await response.json();
 };
 
+//only for testing
+(async () => {
+  const users = await fetchOktaUsers();
+  console.log(
+    "fetched users fron okta ⬇️. If you want to fetch all the users, please remove the ${query} from the fetch URL"
+  );
+  console.log(users);
+})();
+
 // Create user in okta
-export const onboardToOkta = async (email: string, name: string) => {
-  await fetch(`https://${oktaDomain}/api/v1/users`, {
+export const onboardToOkta = async (
+  email: string,
+  firstName: string,
+  lastName: string
+) => {
+  const query = new URLSearchParams({
+    activate: "true",
+    provider: "false",
+    nextLogin: "changePassword",
+  });
+  await fetch(`https://${oktaDomain}/api/v1/users${query}`, {
     method: "POST",
     headers: {
-      Authorization: `SSWS ${oktaToken}`,
       "Content-Type": "applcation/json",
+      Authorization: `SSWS ${oktaToken}`,
     },
     body: JSON.stringify({
-      profile: {}, // the logic for this is still on TODO
+      profile: {
+        firstName,
+        lastName,
+        email,
+        login: email,
+      },
     }),
   });
-  console.log(`Onboard ${name} to Okta`);
+  console.log(`Onboaded ${firstName} ${lastName} to Okta`);
 };
 
 // Delete user from Okta

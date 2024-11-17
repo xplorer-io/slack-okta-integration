@@ -4,11 +4,11 @@ import { fetchOktaUsers, onboardToOkta, removeFromOkta } from "./oktaService";
 
 export const syncUsers = async () => {
   try {
-    const slackUsers = await fetchActiveSlackUsers();
+    const activeSlackUsers = await fetchActiveSlackUsers();
     const oktaUsers = await fetchOktaUsers();
 
     const slackUserEmails = new Set(
-      slackUsers.map((user: any) => user.profile.email)
+      activeSlackUsers.map((user: any) => user.profile.email)
     );
 
     const oktaUserEmails = new Set(
@@ -16,7 +16,7 @@ export const syncUsers = async () => {
     );
 
     //onboard new users to Okta
-    for (const slackUser of slackUsers) {
+    for (const slackUser of activeSlackUsers) {
       if (!oktaUserEmails.has(slackUser.profile.email)) {
         //logic still need to worked on
         await onboardToOkta(
