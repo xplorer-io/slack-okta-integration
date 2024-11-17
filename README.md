@@ -1,14 +1,16 @@
 # Slack-Okta-Integration
 
-# Purpose
+### Purpose
 
 This automation script is to sync our users between two platforms (i.e. Slack and Okta) by consuming thier REST API.
 
-# Scenario
+### Scenario
 
 When someone new joins our slack channel we would like them to be also added into Okta to get access to our hashicorp vault and other platforms.
 
 ## Testing locally
+
+### Prerequisite
 
 To perform test on individual services files to see what response we expect from the API. You can run the following command
 
@@ -48,4 +50,5 @@ We need to consume 3 API's from okta to achieve our goals.
 ## Slack API
 
 Consume API [users.list](https://api.slack.com/methods/users.list)
-Since slack does not provide with up to date users list, we have to filter out the users who are active and not bot.b
+
+- Since slack does not provide with only active users list, we have to filter out the result (bot users, deactived/deleted users)

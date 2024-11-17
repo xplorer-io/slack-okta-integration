@@ -1,11 +1,12 @@
 // logic for comparing users lists from both platforms and performing necessary actions
 import { fetchActiveSlackUsers } from "./slackService";
 import { fetchOktaUsers, onboardToOkta, removeFromOkta } from "./oktaService";
+import { OktaUser, Slackuser } from "types";
 
 export const syncUsers = async () => {
   try {
-    const activeSlackUsers = await fetchActiveSlackUsers();
-    const oktaUsers = await fetchOktaUsers();
+    const activeSlackUsers: Slackuser[] = await fetchActiveSlackUsers();
+    const oktaUsers: OktaUser[] = await fetchOktaUsers();
 
     const slackUserEmails = new Set(
       activeSlackUsers.map((user: any) => user.profile.email)
@@ -15,18 +16,19 @@ export const syncUsers = async () => {
       oktaUsers.map((user: any) => user.profile.email)
     );
 
-    //onboard new users to Okta
+    //ADD new slack users to Okta
     for (const slackUser of activeSlackUsers) {
       if (!oktaUserEmails.has(slackUser.profile.email)) {
         //logic still need to worked on
         await onboardToOkta(
           slackUser.profile.email,
-          slackUser.profile.real_name
+          slackUser.profile.first_name,
+          slackUser.profile.last_name
         );
       }
     }
 
-    //remove users from okta if they are not in slack
+    //DELETE user from Okta (if removed from Slack)
     for (const oktaUser of oktaUsers) {
       if (!slackUserEmails.has(oktaUser.profile.email)) {
         //logic still need to worked on

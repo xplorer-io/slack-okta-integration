@@ -9,3 +9,13 @@ export interface Slackuser {
     image_original: string;
   };
 }
+
+export interface OktaUser {
+  id: string;
+  status: string;
+  profile: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}

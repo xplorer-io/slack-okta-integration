@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import { OktaUser } from "types";
 
 // here only for testing
 import dotenv from "dotenv";
@@ -8,7 +9,7 @@ const oktaDomain = "demo-crimson-coral-79700-admin.okta.com";
 const oktaToken = process.env.OKTA_TOKEN;
 
 // list users from okta
-export const fetchOktaUsers = async () => {
+export const fetchOktaUsers = async (): Promise<OktaUser[]> => {
   const query = new URLSearchParams({
     limit: "3",
   });
@@ -19,7 +20,16 @@ export const fetchOktaUsers = async () => {
       Authorization: `SSWS ${oktaToken}`,
     },
   });
-  return await response.json();
+
+  //Handle HTTP errors gracefully
+  if (!response.ok) {
+    throw new Error(`Failed to fetch okta users: ${response.statusText}`);
+  }
+
+  //parse and return the response
+  const oktaUsers = (await response.json()) as OktaUser[];
+
+  return oktaUsers;
 };
 
 //only for testing
@@ -43,37 +53,63 @@ export const onboardToOkta = async (
   firstName: string,
   lastName: string
 ) => {
-  const query = new URLSearchParams({
-    activate: "true",
-    provider: "false",
-    nextLogin: "changePassword",
-  });
-  await fetch(`https://${oktaDomain}/api/v1/users${query}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "applcation/json",
-      Authorization: `SSWS ${oktaToken}`,
-    },
-    body: JSON.stringify({
-      profile: {
-        firstName,
-        lastName,
-        email,
-        login: email,
+  try {
+    const query = new URLSearchParams({
+      activate: "true",
+      provider: "false",
+      nextLogin: "changePassword",
+    });
+    const response = await fetch(`https://${oktaDomain}/api/v1/users${query}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "applcation/json",
+        Authorization: `SSWS ${oktaToken}`,
       },
-    }),
-  });
-  console.log(`Onboaded ${firstName} ${lastName} to Okta`);
+      body: JSON.stringify({
+        profile: {
+          firstName,
+          lastName,
+          email,
+          login: email,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to onboard user ${email} to Okta : ${response.statusText}`
+      );
+    }
+    console.log(`Onboaded ${firstName} ${lastName} to Okta`);
+  } catch (error) {
+    console.error(`Error onboarding user ${email} to Okta: ${error}`);
+    throw error;
+  }
 };
 
 // Delete user from Okta
 export const removeFromOkta = async (userId: string) => {
-  await fetch(`https://${oktaDomain}/api/v1/users/${userId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `SSWS ${oktaToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-  console.log(`Remove user ${userId} from OKTA`);
+  try {
+    const response = await fetch(
+      `https://${oktaDomain}/api/v1/users/${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `SSWS ${oktaToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to remove user ${userId} from Okta : ${response.statusText}`
+      );
+    }
+
+    console.log(`Remove user ${userId} from Okta`);
+  } catch (error) {
+    console.error(`Error removing user ${userId} from Okta : ${error}`);
+    throw error;
+  }
 };
