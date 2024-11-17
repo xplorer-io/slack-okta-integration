@@ -5,9 +5,9 @@
   "description": "This integration helps in stream lining the users in both Okta and Slack platform",
   "main": "app.ts",
   "scripts": {
-    "start": "npx tsx  src/syncUsers.ts",
-    "fetchSlack": "tsx src/services/slackService.ts",
-    "fetchOkta": "tsx src/services/oktaservice.ts"
+    "start": "tsx  src/syncUsers.ts",
+    "fetchSlackUsers": "tsx src/services/slackService.ts",
+    "fetchOktaUsers": "tsx src/services/oktaservice.ts"
   },
   "keywords": [],
   "author": "",

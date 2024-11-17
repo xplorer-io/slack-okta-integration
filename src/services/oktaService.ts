@@ -31,6 +31,12 @@ export const fetchOktaUsers = async () => {
   console.log(users);
 })();
 
+const onboardTestUser = {
+  firstName: "bob",
+  lastName: "alex",
+  email: "test@yashshrestha.net",
+};
+
 // Create user in okta
 export const onboardToOkta = async (
   email: string,
