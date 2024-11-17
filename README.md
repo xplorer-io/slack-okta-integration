@@ -8,16 +8,29 @@ This automation script is to sync our users between two platforms (i.e. Slack an
 
 When someone new joins our slack channel we would like them to be also added into Okta to get access to our hashicorp vault and other platforms.
 
-## running it locally
+## Testing locally
 
-To perform test on individual services files to see what response we expect from the API.
+To perform test on individual services files to see what response we expect from the API. You can run the following command
+
+1. ` pnpm install`
+2. For requesting users from Slack
+
+```
+pnpm run fetchSlackUsers
+```
+
+3. For requesting users from Okta
+
+```
+pnpm run fetchOktaUsers
+```
+
+> Since `ts-node` is giving out too much of issue while trying to run it, we will be using tsx.
 
 Known error referecnes:
-https://stackoverflow.com/questions/62096269/unknown-file-extension-ts-for-a-typescript-file
-https://github.com/TypeStrong/ts-node/issues/2100
 
-Since ts-node is giving out too much of issue while trying to run it, we will be using tsx.
-npx tsx [filepath]
+- https://stackoverflow.com/questions/62096269/unknown-file-extension-ts-for-a-typescript-file
+- https://github.com/TypeStrong/ts-node/issues/2100
 
 ## Okta API
 
