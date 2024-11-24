@@ -27,12 +27,7 @@ pnpm run fetchSlackUsers
 pnpm run fetchOktaUsers
 ```
 
-> Since `ts-node` is giving out too much of issue while trying to run it, we will be using tsx.
-
-Known error referecnes:
-
-- https://stackoverflow.com/questions/62096269/unknown-file-extension-ts-for-a-typescript-file
-- https://github.com/TypeStrong/ts-node/issues/2100
+> Since `ts-node` is giving out too much of issue [1](https://stackoverflow.com/questions/62096269/unknown-file-extension-ts-for-a-typescript-file), [2](https://github.com/TypeStrong/ts-node/issues/2100) while trying to run it, we will be using tsx.
 
 ## Okta API
 
